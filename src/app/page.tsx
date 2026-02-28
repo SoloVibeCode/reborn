@@ -28,7 +28,7 @@ export default async function Home() {
           </h2>
           <p className="text-reborn-text-secondary max-w-lg mx-auto">
             Cada día seleccionamos los 4 posts más relevantes sobre Inteligencia
-            Artificial de X.com, curados por IA.
+            Artificial de Reddit y Hacker News, curados por IA.
           </p>
         </div>
 
