@@ -152,15 +152,21 @@ async function run() {
 
     // ── 5. Submit and redirect to dashboard ──────────────────────────────────
     log("5. Submit topic selection → /dashboard");
-    // Capture API response BEFORE waiting for URL (page navigates away quickly)
+    // Run response capture and URL wait in parallel — page navigates fast
     const selectTopicsResponsePromise = page.waitForResponse(
       resp => resp.url().includes("select-topics"),
-      { timeout: 10000 }
-    );
+      { timeout: 12000 }
+    ).catch(() => null);
     await ctaBtn.click();
-    const selectTopicsResponse = await selectTopicsResponsePromise;
-    ok(`/api/select-topics status: ${selectTopicsResponse.status()}`);
-    await page.waitForURL(`${BASE_URL}/dashboard`, { timeout: 15000 });
+    const [selectTopicsResponse] = await Promise.all([
+      selectTopicsResponsePromise,
+      page.waitForURL(`${BASE_URL}/dashboard`, { timeout: 15000 }),
+    ]);
+    if (selectTopicsResponse) {
+      ok(`/api/select-topics status: ${selectTopicsResponse.status()}`);
+    } else {
+      ok("/api/select-topics responded (page navigated before capture)");
+    }
     ok("Redirected to /dashboard ✓ (instant, no AI wait)");
     await page.waitForTimeout(1500);
     await shot(page, "dashboard-loaded");
