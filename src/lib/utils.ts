@@ -7,6 +7,11 @@ export function formatDate(date: Date): string {
   });
 }
 
+export function formatScore(score: number): string {
+  if (score >= 1000) return `${(score / 1000).toFixed(1)}k`;
+  return String(score);
+}
+
 export function getCategoryColor(category: string): string {
   const colors: Record<string, string> = {
     LLMs: "bg-purple-500/20 text-purple-400 border-purple-500/30",
